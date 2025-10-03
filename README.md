@@ -236,6 +236,17 @@ npm run start
 - **Irrigation Optimization** - Smart watering recommendations
 - **Performance Analytics** - Yield tracking and improvement suggestions
 
+## 👥 Contributors
+
+This project was developed by a talented team for the NASA Space Apps Challenge 2025:
+
+- **Mahfuz Hasan Reza** – Team Leader & Video Editor, also served as the Software Lead of UIU CanSat Team (CanSat Competition 2025, Virginia, USA)
+- **Samia Sayeed** – Researcher & Storyteller, previously a Branding Member of UIU Mariner Team (MATE ROV Competition 2025, USA)
+- **Rifat Hridoy** – Full Stack Developer, Researcher, AI/ML Engineer
+- **Shadab Yasar** – Machine Learning Engineer
+- **Aranya Kishor Das** – UI/UX Designer
+- **Koushik Kumar Roy** – Researcher, AI/ML Engineer
+
 ## 🤝 Contributing
 
 1. Fork the repository
