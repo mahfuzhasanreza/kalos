@@ -89,15 +89,38 @@ export default function AlertsPage() {
               ))}
             </div>
           </section>
+
+          <section className="rounded-[32px] border border-[#fbbf24] bg-gradient-to-br from-[#f59e0b] to-[#dc2626] p-5 text-white shadow-[0_20px_42px_rgba(245,158,11,0.25)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+                  <LuShieldAlert className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold">Emergency Assistant</h3>
+                  <p className="text-xs text-orange-100">Get safety guidance and emergency help</p>
+                </div>
+              </div>
+              <Link
+                href="/alerts/assistant"
+                className="rounded-full bg-white/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/30"
+              >
+                Get help
+              </Link>
+            </div>
+            <p className="mt-3 text-sm text-orange-50">
+              Ask about safety precautions, emergency procedures, and how to respond to current weather alerts and danger signals.
+            </p>
+          </section>
         </main>
 
-        <button
-          type="button"
+        <Link
+          href="/alerts/assistant"
           aria-label="Ask AI about alerts"
-          className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#0b7ef3] to-[#38bdf8] text-white shadow-[0_18px_36px_rgba(11,126,243,0.35)] transition hover:scale-[1.05]"
+          className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#f59e0b] to-[#dc2626] text-white shadow-[0_18px_36px_rgba(245,158,11,0.35)] transition hover:scale-[1.05]"
         >
-          <LuBot className="h-6 w-6" />
-        </button>
+          <LuShieldAlert className="h-6 w-6" />
+        </Link>
 
         <BottomNav items={navItems} className="sticky bottom-4 z-40" />
       </div>

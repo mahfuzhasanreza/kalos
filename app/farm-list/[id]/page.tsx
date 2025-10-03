@@ -172,15 +172,38 @@ export default function FarmDetailsPage({ params }: { params: { id: string } }) 
               ))}
             </ul>
           </section>
+
+          <section className="rounded-[32px] border border-[#dbe4f7] bg-gradient-to-br from-[#0b7ef3] to-[#38bdf8] p-5 text-white shadow-[0_20px_42px_rgba(11,126,243,0.25)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+                  <LuBot className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold">AI Farm Assistant</h3>
+                  <p className="text-xs text-blue-100">Get smart recommendations for your farm</p>
+                </div>
+              </div>
+              <Link
+                href={`/farm-list/${params.id}/assistant`}
+                className="rounded-full bg-white/20 px-4 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/30"
+              >
+                Chat now
+              </Link>
+            </div>
+            <p className="mt-3 text-sm text-blue-50">
+              Ask about irrigation timing, crop health, weather impacts, and get personalized farming advice based on your real-time data.
+            </p>
+          </section>
         </main>
 
-        <button
-          type="button"
+        <Link
+          href={`/farm-list/${params.id}/assistant`}
           aria-label="Open AI assistant"
           className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#0b7ef3] to-[#38bdf8] text-white shadow-[0_18px_36px_rgba(11,126,243,0.35)] transition hover:scale-[1.05]"
         >
           <LuBot className="h-6 w-6" />
-        </button>
+        </Link>
 
         <BottomNav items={navItems} className="sticky bottom-4 z-40" />
       </div>

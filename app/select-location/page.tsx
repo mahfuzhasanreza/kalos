@@ -1,11 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Sheet } from 'react-modal-sheet';
 import type { LocationMapProps } from "../components/location-map";
 import { IoArrowBack } from "react-icons/io5";
-import { LuCalendarDays, LuClock3, LuLocateFixed, LuLoader, LuCloudSun, LuCloudLightning, LuCloudRain, LuCloud } from "react-icons/lu";
+import { LuClock3, LuLocateFixed, LuLoader, LuCloudSun, LuCloudLightning, LuCloudRain, LuCloud } from "react-icons/lu";
 import { ArrowRightIcon } from "../components/icons";
 import type { IconType } from "react-icons";
 
@@ -96,14 +96,6 @@ const FORECAST_ITEMS: ForecastItem[] = [
 ];
 
 export default function SelectLocationPage() {
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  });
-  const [selectedTime, setSelectedTime] = useState(() => {
-    const today = new Date();
-    return today.toTimeString().slice(0, 5);
-  });
   const [position, setPosition] = useState<[number, number]>(DEFAULT_LOCATION);
   const [isLocating, setIsLocating] = useState(false);
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -114,29 +106,6 @@ export default function SelectLocationPage() {
     () => `${position[0].toFixed(5)}, ${position[1].toFixed(5)}`,
     [position]
   );
-
-  const formattedDate = useMemo(() => {
-    if (!selectedDate) return 'Select a date';
-    const parsed = new Date(selectedDate);
-    if (Number.isNaN(parsed.getTime())) return selectedDate;
-    return parsed.toLocaleDateString(undefined, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  }, [selectedDate]);
-
-  const formattedTime = useMemo(() => {
-    if (!selectedTime) return 'Select a time';
-    const [hours, minutes] = selectedTime.split(':');
-    if (hours === undefined || minutes === undefined) return selectedTime;
-    const reference = new Date();
-    reference.setHours(Number(hours), Number(minutes), 0, 0);
-    return reference.toLocaleTimeString([], {
-      hour: 'numeric',
-      minute: '2-digit',
-    });
-  }, [selectedTime]);
 
   const selectedDay = useMemo(() => {
     if (!selectedDayId) return null;
@@ -176,14 +145,6 @@ export default function SelectLocationPage() {
     );
   }, []);
 
-  const handleDateChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(event.target.value);
-  }, []);
-
-  const handleTimeChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedTime(event.target.value);
-  }, []);
-
   const handlePredictWeather = useCallback(() => {
     setSelectedDayId(FORECAST_ITEMS[0]?.id ?? null);
     setViewMode('overview');
@@ -219,7 +180,7 @@ export default function SelectLocationPage() {
       <button
         type="button"
         aria-label="Go back"
-        className="absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#1b1b1b] shadow-lg backdrop-blur transition hover:bg-white"
+        className="absolute left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#1b1b1b] shadow-lg backdrop-blur transition hover:bg-white"
       >
         <IoArrowBack className="h-5 w-5" />
       </button>
@@ -256,7 +217,7 @@ export default function SelectLocationPage() {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <h1 className="text-xl font-semibold text-[#10131b]">Plan your forecast</h1>
                     <span className="rounded-full bg-[#eff3ff] px-3 py-1 text-xs font-semibold tracking-wide text-[#0b5ed7]">
-                      Date &amp; time ready
+                      Location ready
                     </span>
                   </div>
                   <div className="rounded-2xl border border-[#e4e8ef] bg-gradient-to-r from-[#f9fbff] to-[#eef3ff] px-5 py-4 shadow-[0_18px_40px_rgba(15,40,94,0.08)]">
@@ -279,41 +240,6 @@ export default function SelectLocationPage() {
                   {geoError && <p className="text-center text-xs font-medium text-[#d14343]">{geoError}</p>}
                 </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8992a0]">Forecast schedule</h2>
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <label className="flex flex-col rounded-3xl border border-[#e5eaf4] bg-white/90 px-5 py-4 shadow-[0_12px_28px_rgba(15,40,94,0.08)] backdrop-blur">
-                      <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#7b8498]">
-                        <LuCalendarDays className="h-4 w-4 text-[#0b5ed7]" /> Date
-                      </span>
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        className="mt-3 w-full rounded-2xl border border-transparent bg-[#f5f7ff] px-4 py-3 text-sm font-semibold text-[#0f172a] shadow-inner focus:border-[#0b5ed7] focus:outline-none focus:ring-2 focus:ring-[#0b5ed7]/40"
-                      />
-                    </label>
-                    <label className="flex flex-col rounded-3xl border border-[#e5eaf4] bg-white/90 px-5 py-4 shadow-[0_12px_28px_rgba(15,40,94,0.08)] backdrop-blur">
-                      <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#7b8498]">
-                        <LuClock3 className="h-4 w-4 text-[#0b5ed7]" /> Time
-                      </span>
-                      <input
-                        type="time"
-                        value={selectedTime}
-                        onChange={handleTimeChange}
-                        className="mt-3 w-full rounded-2xl border border-transparent bg-[#f5f7ff] px-4 py-3 text-sm font-semibold text-[#0f172a] shadow-inner focus:border-[#0b5ed7] focus:outline-none focus:ring-2 focus:ring-[#0b5ed7]/40"
-                      />
-                    </label>
-                  </div>
-                </section>
-
-                <section className="rounded-3xl border border-dashed border-[#dbe3f3] bg-[#f8faff] px-5 py-4 text-sm text-[#5f6c85]">
-                  <p>
-                    Forecasting for <span className="font-semibold text-[#0b5ed7]">{formattedDate}</span> at{' '}
-                    <span className="font-semibold text-[#0b5ed7]">{formattedTime}</span>.
-                  </p>
-                </section>
-
                 <div className="flex flex-col gap-4">
                   <button
                     type="button"
@@ -323,7 +249,7 @@ export default function SelectLocationPage() {
                     Predict Weather
                   </button>
                   <p className="text-center text-xs text-[#9aa3b5]">
-                    We’ll prepare your forecast using the selected schedule and coordinates above.
+                    We'll prepare your forecast using the coordinates above.
                   </p>
                 </div>
               </div>
@@ -336,7 +262,7 @@ export default function SelectLocationPage() {
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7b8498]">4-day outlook</p>
                         <h1 className="mt-1 text-xl font-semibold text-[#10131b]">Forecast ready</h1>
                         <p className="text-xs text-[#6f7a96]">
-                          Based on {formattedDate} at {formattedTime}
+                          Based on current conditions
                         </p>
                       </div>
                       <button
@@ -344,7 +270,7 @@ export default function SelectLocationPage() {
                         onClick={handleEditSchedule}
                         className="rounded-full border border-[#d1d9ea] px-4 py-2 text-xs font-semibold text-[#0b5ed7] shadow-sm transition hover:bg-[#eff4ff]"
                       >
-                        Adjust schedule
+                        Adjust location
                       </button>
                     </header>
 
@@ -401,7 +327,7 @@ export default function SelectLocationPage() {
                           onClick={handleEditSchedule}
                           className="rounded-full border border-[#d1d9ea] px-4 py-2 text-xs font-semibold text-[#0b5ed7] shadow-sm transition hover:bg-[#eff4ff]"
                         >
-                          Adjust schedule
+                          Adjust location
                         </button>
                       </div>
                     </header>
@@ -425,7 +351,7 @@ export default function SelectLocationPage() {
 
                     <div className="rounded-3xl border border-[#dbe3f3] bg-white/70 px-5 py-4 text-xs text-[#5f6c85] shadow-[0_16px_30px_rgba(15,40,94,0.08)]">
                       <p>
-                        You’re viewing an hourly snapshot. Swipe to compare days or adjust the schedule anytime.
+                        You're viewing an hourly snapshot. Swipe to compare days or adjust the location anytime.
                       </p>
                     </div>
                   </>

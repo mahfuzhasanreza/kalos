@@ -22,7 +22,7 @@ export default function Home() {
   <main className="flex flex-1 flex-col gap-6 pb-24">
           <WeatherCard temperature="19°" unit="Celsius" condition="Partly Cloudy" />
 
-          <ForecastButton label="7 Days Forecast" href="/forecast" />
+          <ForecastButton label="7 Days Forecast" href="/select-location" />
 
           <section className="space-y-5">
             <AlertCard

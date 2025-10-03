@@ -124,8 +124,8 @@ export function LocationMap({
       zoom={zoom}
       scrollWheelZoom={scrollWheelZoom}
       zoomControl={false}
-  className={mapClassName.join(' ')}
-  style={{ height: '100%', minHeight: '16rem', width: '100%' }}
+      className={mapClassName.join(' ')}
+      style={{ height: '100%', width: '100%' }}
     >
       <TileLayer
         attribution={

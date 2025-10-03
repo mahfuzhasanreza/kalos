@@ -228,6 +228,23 @@ export default function ForecastPage() {
     [mapPosition]
   );
 
+  const dayHighlights = useMemo(
+    () => [
+      { label: 'Window', value: selectedDay.window },
+      { label: 'Rain', value: selectedDay.precipitation },
+      { label: 'Wind', value: selectedDay.wind },
+    ],
+    [selectedDay]
+  );
+
+  const temperatureRange = useMemo(
+    () => [
+      { label: 'High', value: selectedDay.high },
+      { label: 'Low', value: selectedDay.low },
+    ],
+    [selectedDay]
+  );
+
   const handleSelectDay = useCallback(
     (dayId: string) => {
       const matchingDay = FORECAST_DAYS.find((day) => day.id === dayId);
@@ -250,113 +267,152 @@ export default function ForecastPage() {
   }, [selectedDay]);
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col bg-sky-100 text-slate-900">
-      <div className="mx-auto w-full max-w-[420px] px-5 pt-8">
-        <header className="flex items-center justify-between rounded-[28px] bg-white px-4 py-4 shadow-[0_16px_40px_rgba(14,122,254,0.18)]">
-          <Link
-            href="/"
-            aria-label="Back to dashboard"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-sky-600 shadow-[0_14px_30px_rgba(14,122,254,0.18)] transition hover:bg-sky-50"
-          >
-            <LuArrowLeft className="h-5 w-5" />
-          </Link>
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-sky-100 text-slate-900">
+      <div className="absolute inset-0">
+        <LocationMap
+          center={mapPosition}
+          marker={mapPosition}
+          onLocationChange={handleLocationChange}
+          className="h-full w-full"
+          zoom={13}
+          scrollWheelZoom
+        />
+      </div>
 
-          <div className="flex flex-col items-center text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-600">Field itinerary</p>
-            <h1 className="mt-1 text-lg font-semibold text-slate-900">Auckland Corridors</h1>
-            <p className="text-[10px] text-slate-600">
-              {selectedDay.weekDay}, {selectedDay.dateLabel}
-            </p>
-          </div>
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/10 via-white/65 to-white/85"
+        aria-hidden="true"
+      />
 
-          <button
-            type="button"
-            aria-label="View alerts"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-orange-500 shadow-[0_14px_30px_rgba(255,133,61,0.18)] transition hover:bg-orange-50"
-          >
-            <HiOutlineBellAlert className="h-5 w-5" />
-          </button>
-        </header>
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="pointer-events-auto mx-auto w-full max-w-[420px] px-5 pt-8">
+          <header className="flex items-center justify-between rounded-[28px] bg-white/90 px-4 py-4 shadow-[0_16px_40px_rgba(14,122,254,0.18)] backdrop-blur">
+            <Link
+              href="/"
+              aria-label="Back to dashboard"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-sky-600 shadow-[0_14px_30px_rgba(14,122,254,0.18)] transition hover:bg-sky-50"
+            >
+              <LuArrowLeft className="h-5 w-5" />
+            </Link>
 
-        <div className="mt-6">
-          <div className="flex gap-2 overflow-x-auto rounded-full bg-white p-2 shadow-[0_16px_36px_rgba(14,122,254,0.18)]">
-            {FORECAST_DAYS.map((day) => {
-              const isSelected = day.id === selectedDay.id;
-              return (
-                <button
-                  key={day.id}
-                  type="button"
-                  onClick={() => handleSelectDay(day.id)}
-                  className={`flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-full border text-center transition ${
-                    isSelected
-                      ? 'border-sky-500 bg-sky-600 text-white shadow-[0_16px_32px_rgba(14,122,254,0.35)]'
-                      : 'border-sky-200 bg-white text-slate-700 hover:bg-sky-50'
-                  }`}
-                >
-                  <span className="text-lg font-semibold leading-none">{day.dayNumber}</span>
-                  <span
-                    className={`text-[9px] uppercase tracking-[0.28em] ${
-                      isSelected ? 'text-white/80' : 'text-slate-500'
+            <div className="flex flex-col items-center text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-600">Field itinerary</p>
+              <h1 className="mt-1 text-lg font-semibold text-slate-900">Auckland Corridors</h1>
+              <p className="text-[10px] text-slate-600">
+                {selectedDay.weekDay}, {selectedDay.dateLabel}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              aria-label="View alerts"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-orange-500 shadow-[0_14px_30px_rgba(255,133,61,0.18)] transition hover:bg-orange-50"
+            >
+              <HiOutlineBellAlert className="h-5 w-5" />
+            </button>
+          </header>
+
+          <div className="mt-6">
+            <div className="flex gap-2 overflow-x-auto rounded-full bg-white/90 p-2 shadow-[0_16px_36px_rgba(14,122,254,0.18)] backdrop-blur">
+              {FORECAST_DAYS.map((day) => {
+                const isSelected = day.id === selectedDay.id;
+                return (
+                  <button
+                    key={day.id}
+                    type="button"
+                    onClick={() => handleSelectDay(day.id)}
+                    className={`flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-full border text-center transition ${
+                      isSelected
+                        ? 'border-sky-500 bg-sky-600 text-white shadow-[0_16px_32px_rgba(14,122,254,0.35)]'
+                        : 'border-sky-200 bg-white text-slate-700 hover:bg-sky-50'
                     }`}
                   >
-                    Day
-                  </span>
-                  <span
-                    className={`text-[9px] font-medium ${
-                      isSelected ? 'text-white/80' : 'text-slate-500'
-                    }`}
-                  >
-                    {day.weekDay}
-                  </span>
-                </button>
-              );
-            })}
+                    <span className="text-lg font-semibold leading-none">{day.dayNumber}</span>
+                    <span
+                      className={`text-[9px] uppercase tracking-[0.28em] ${
+                        isSelected ? 'text-white/80' : 'text-slate-500'
+                      }`}
+                    >
+                      Day
+                    </span>
+                    <span
+                      className={`text-[9px] font-medium ${
+                        isSelected ? 'text-white/80' : 'text-slate-500'
+                      }`}
+                    >
+                      {day.weekDay}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
+        </div>
+
+        <div className="flex-1" />
+      </div>
+
+      <div className="pointer-events-auto absolute left-6 top-[220px] z-20 flex flex-col gap-3">
+        <span className="inline-flex rounded-full bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-600 shadow">
+          {selectedDay.location}
+        </span>
+        <div className="rounded-3xl bg-white/90 px-4 py-2 text-[11px] text-slate-600 shadow backdrop-blur">
+          <p className="text-xs font-semibold text-slate-700">{selectedDay.weekDay}</p>
+          <p className="text-[11px] text-slate-500">{selectedDay.dateLabel}</p>
         </div>
       </div>
 
-      <div className="mt-6 flex flex-1 flex-col">
-        <div className="relative h-full w-full overflow-hidden rounded-t-[44px] border-t border-sky-200 bg-white shadow-[0_40px_80px_rgba(14,122,254,0.18)]">
-          <LocationMap
-            center={mapPosition}
-            marker={mapPosition}
-            onLocationChange={handleLocationChange}
-            className="h-full w-full"
-            zoom={13}
-            scrollWheelZoom
-          />
+      <div className="pointer-events-auto absolute right-6 top-[220px] z-20 flex flex-col items-end gap-3">
+        <div className="rounded-3xl bg-white px-4 py-2 text-[11px] text-slate-600 shadow">
+          Active pin • {formattedCoordinates}
+        </div>
+        <button
+          type="button"
+          onClick={handleSnapToDay}
+          className="flex items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-[11px] font-semibold text-sky-700 transition hover:bg-sky-200"
+        >
+          <LuLocateFixed className="h-4 w-4" /> Snap to day
+        </button>
+        <button
+          type="button"
+          onClick={handleSnapToDay}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-sky-600 shadow-[0_12px_24px_rgba(14,122,254,0.2)] transition hover:bg-sky-50"
+          aria-label="Recenter map"
+        >
+          <LuLocateFixed className="h-6 w-6" />
+        </button>
+      </div>
 
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/20" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-10 z-20">
+        <div className="pointer-events-auto mx-auto w-full max-w-[420px] px-5">
+          <div className="rounded-[36px] bg-white/90 px-6 py-6 shadow-[0_28px_60px_rgba(14,122,254,0.2)] backdrop-blur">
+            <header className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-sky-600">Summary</p>
+                <h2 className="mt-2 text-lg font-semibold text-slate-900">{selectedDay.summary}</h2>
+              </div>
+              <span className="rounded-full bg-sky-100 px-3 py-1 text-[11px] font-semibold text-slate-600">
+                Day {selectedDay.dayNumber}
+              </span>
+            </header>
 
-          <div className="pointer-events-auto absolute left-6 top-6 flex flex-col gap-3">
-            <span className="inline-flex rounded-full bg-white px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-sky-600 shadow">
-              {selectedDay.location}
-            </span>
-            <div className="rounded-3xl bg-white px-4 py-2 text-[11px] text-slate-600 shadow">
-              <p className="text-xs font-semibold text-slate-700">{selectedDay.weekDay}</p>
-              <p className="text-[11px] text-slate-500">{selectedDay.dateLabel}</p>
+            <div className="mt-5 grid grid-cols-3 gap-3 text-center text-sm">
+              {dayHighlights.map(({ label, value }) => (
+                <div key={label} className="rounded-3xl bg-sky-50 px-3 py-3 text-slate-800">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">{label}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
+                </div>
+              ))}
             </div>
-          </div>
 
-          <div className="pointer-events-auto absolute right-6 top-6 flex flex-col items-end gap-3">
-            <div className="rounded-3xl bg-white px-4 py-2 text-[11px] text-slate-600 shadow">
-              Active pin • {formattedCoordinates}
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {temperatureRange.map(({ label, value }) => (
+                <div key={label} className="rounded-3xl bg-white px-4 py-3 text-center text-slate-700 shadow-[0_12px_24px_rgba(14,122,254,0.16)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-500">{label}</p>
+                  <p className="mt-1 text-lg font-semibold text-slate-900">{value}</p>
+                </div>
+              ))}
             </div>
-            <button
-              type="button"
-              onClick={handleSnapToDay}
-              className="flex items-center gap-2 rounded-full bg-sky-100 px-4 py-2 text-[11px] font-semibold text-sky-700 transition hover:bg-sky-200"
-            >
-              <LuLocateFixed className="h-4 w-4" /> Snap to day
-            </button>
-            <button
-              type="button"
-              onClick={handleSnapToDay}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-sky-600 shadow-[0_12px_24px_rgba(14,122,254,0.2)] transition hover:bg-sky-50"
-              aria-label="Recenter map"
-            >
-              <LuLocateFixed className="h-6 w-6" />
-            </button>
           </div>
         </div>
       </div>
