@@ -1,3 +1,6 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/mahfuzhasanreza/kalos-server
+[submodule "dataset"]
+	path = dataset
+	url = https://github.com/mahfuzhasanreza/kalos-dataset-train
